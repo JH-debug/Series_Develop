@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>
+    html, body{
+      height: 100%;
+      margin: 0;
+    }
+    .container{
+      border: 1px solid red;
+      /*부모의 값의 100%, 따라서 body 속성 필요*/
+      height: 100%;
+      /*자기 자신-container와 아래의 자기 자식들-items을 어떻게 연관시켜줄 것인가*/
+      display: flex;
+      /*flex 정렬을 어떻게 할 것인가*/
+      flex-direction: column;
+      /*방향 정렬 기준*/
+      justify-content: center;
+      /*나머지 축 기준*/
+      align-items: center;
+    }
+    .items{
+      width: 100px;
+      height: 100px;
+      background-color: blue;
+      margin: 1px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="items"></div>
+<!--  <div class="items"></div>-->
+<!--  <div class="items"></div>-->
+<!--  <div class="items"></div>-->
+</div>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <title>쇼핑몰 사이트</title>
+
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="main.css">
+
+    <!-- 구글 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+
+    <!-- Alert -->
+    <script>
+        function order() {
+                alert('주문이 완료되었습니다.');
+        }
+    </script>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="card">
+            <img class="card-img-top"
+               src="https://image.chosun.com/sitedata/image/201912/30/2019123001797_0.png"
+               alt="Card image cap">
+
+            <div class="card-body">
+                <h1 class="card-title">"꼬북칩"
+                <span class="price_num">가격: 2,300원 / 개</span>
+                </h1>
+                <p class="card-text">2017년 3월 출시된 꼬북칩은 오리온의 60년 제과 개발·제조 노하우를 결집해 기술적 한계를 극복하고 8년의 노력 끝에 탄생한 국내 제과시장 최초의 '네겹 스낵'입니다.</p>
+            </div>
+
+            <div class="card-form">
+                <h3 class="card-title">[주문하기]</h3>
+                    <div class="input-group mb-3">
+                        <label class="input-group-text"> 주문자 이름: </label>
+                        <input type="text" class="form-control">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text"> 수량: </label>
+                        <select class="form-control">
+                            <option selected> -- 수량을 선택하세요 -- </option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text"> 주소: </label>
+                        <input type="text" class="form-control">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text"> 전화번호: </label>
+                        <input type="text" class="form-control">
+                    </div>
+            </div>
+        </div>
+        <div class="button">
+            <button onclick="order()" type="submit" class="btn btn-primary">주문하기</button>
+        </div>
+    </div>
+</body>
+</html>
