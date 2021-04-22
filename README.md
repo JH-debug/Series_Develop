@@ -1,1 +1,1 @@
-# Series_D 
+# Series_D class
