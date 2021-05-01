@@ -37,9 +37,24 @@
         }
     </style>
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
           showPost();
         });
+
+        function showPost() {
+            $.ajax({
+                type: "GET",
+                url: "http://spartacodingclub.shop/post",
+                data: {},
+                success: function (response) {
+                    let articles = response["articles"];
+                    for (let i = 0; i < articles.length; i++) {
+                        let article = articles[i];
+                        makeCard(article["image"], article["url"], article["title"], article["desc"], article["comment"]);
+                    }
+                }
+            });
+        }
 
         function showPost() {
             console.log("화면 로딩 후 잘 실행되었습니다");
