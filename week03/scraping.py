@@ -1,3 +1,4 @@
+# https://velog.io/@c_hyun403/Python-WEB-CRAWLING
 import requests
 from bs4 import BeautifulSoup
 
@@ -16,11 +17,14 @@ soup = BeautifulSoup(
 
 selector = '#old_content > table > tbody > tr'
 title_selector = 'td.title > div > a'
+rank_selector = 'td.ac > img'
+grade_selector = 'td.point'
 
 titles = soup.select(selector)
 for title in titles:
     title_tag = title.select_one(title_selector)
+    rank_tag = title.select_one(rank_selector)
+    grade_tag = title.select_one(grade_selector)
     if title_tag:
-        print(title_tag.text)
-
+        print(rank_tag['alt'], title_tag.text, grade_tag.text)
 
