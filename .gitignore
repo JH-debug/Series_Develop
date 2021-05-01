@@ -1,6 +1,11 @@
 
+<<<<<<< HEAD
 # Created by https://www.toptal.com/developers/gitignore/api/node,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,python
+=======
+# Created by https://www.toptal.com/developers/gitignore/api/node
+# Edit at https://www.toptal.com/developers/gitignore?templates=node
+>>>>>>> origin/master
 
 ### Node ###
 # Logs
@@ -128,6 +133,7 @@ dist/
 tmp/
 temp/
 
+<<<<<<< HEAD
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -277,3 +283,6 @@ Thumbs.db
 # End of https://www.toptal.com/developers/gitignore/api/node,python
 
 week03/secret.py
+=======
+# End of https://www.toptal.com/developers/gitignore/api/node
+>>>>>>> origin/master
