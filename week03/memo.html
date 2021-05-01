@@ -36,13 +36,40 @@
             border-radius: 5px;
         }
     </style>
+
     <script>
-        $(document).ready(function(){
-          showPost();
+        $(document).ready(function () {
+            $("#cards-box").empty();
+            showPost();
         });
 
         function showPost() {
-            console.log("화면 로딩 후 잘 실행되었습니다");
+            $.ajax({
+                type: "GET",
+                url: "http://spartacodingclub.shop/post",
+                data: {},
+                success: function (response) {
+                    let articles = response["articles"];
+                    for (let i = 0; i < articles.length; i++) {
+                        let article = articles[i];
+                        makeCard(article["image"], article["url"], article["title"], article["desc"], article["comment"])
+                    }
+                }
+            });
+        }
+
+        function makeCard(image, url, title,  desc, comment) {
+            let tempHtml = `<div class="card">
+                                <img class="card-img-top"
+                                src="${image}"
+                                alt="Card image cap">
+                                <div class="card-body">
+                                    <a href="${url}" target="_blank" class="card-title">${title}</a>
+                                    <p class="card-text">${desc}</p>
+                                    <p class="card-text comment">${comment}</p>
+                                </div>
+                            </div>`;
+            $("#cards-box").append(tempHtml);
         }
 
         function openClose() {
@@ -51,7 +78,7 @@
                 // post-box를 가리고
                 $("#post-box").hide();
                 // 다시 버튼을 클릭하면, 박스 열기를 할 수 있게 텍스트 바꿔두기
-                $("#btn-post-box").text('포스팅 박스 열기');
+                $("#btn-post-box").text("포스팅 박스 열기");
             } else {
                 // 아니면(눈에 보이지 않으면) post-box를 펴라
                 $("#post-box").show();
@@ -60,6 +87,7 @@
             }
         }
     </script>
+
 </head>
 <body>
 <div class="wrap">
