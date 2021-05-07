@@ -4,11 +4,11 @@
 ## 사용 기술
 1. HTML
 2. CSS
-    - bootstrap
+    * bootstrap
 3. js
-    - node.js
-    - jest
-    - jQuery
+    * node.js
+    * jest
+    * jQuery
 4. python
     * requests
     * beautifulsoup4  
