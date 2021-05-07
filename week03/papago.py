@@ -1,9 +1,9 @@
-# https://wikidocs.net/44095
+# 참고: https://wikidocs.net/44095
 import requests
 import secret
 import pprint
 
-text = "번역할 내용"
+text = "안녕하세요"
 data = "source=ko&target=en&text=" + text
 naver_url = 'https://openapi.naver.com/v1/papago/n2mt'
 
@@ -14,7 +14,7 @@ headers = {
 
 data = {'source':'ko',
         'target':'en',
-        'text':'안녕하세요'.encode('utf-8')}
+        'text': text.encode('utf-8')}
 
 response = requests.post(naver_url,
                         headers = headers,
