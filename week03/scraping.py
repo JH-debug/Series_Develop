@@ -1,4 +1,3 @@
-# https://velog.io/@c_hyun403/Python-WEB-CRAWLING
 import requests
 from bs4 import BeautifulSoup
 
