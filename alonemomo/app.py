@@ -53,6 +53,13 @@ def save_memo():
         {'result': 'success', 'msg': '저장됐습니다.'}
     )
 
+@app.route('/memo', methods=['GET'])
+def list_memo():
+    memos = list(db.articles.find({}, {'_id': False}))
+    return jsonify({
+        'result': 'success',
+        'articles': memos}
+    )
 
 # app.py 파일 실행
 if __name__ == '__main__':
