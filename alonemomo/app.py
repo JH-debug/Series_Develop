@@ -50,7 +50,7 @@ def save_memo():
 
     db.articles.insert_one(document)
     return jsonify(
-        {'result': 'success'}
+        {'result': 'success', 'msg': '저장됐습니다.'}
     )
 
 
