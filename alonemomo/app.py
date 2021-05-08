@@ -3,6 +3,7 @@ from pymongo import MongoClient
 import requests
 from bs4 import BeautifulSoup
 
+
 app = Flask(__name__)
 
 # mongodb 추가
@@ -12,8 +13,8 @@ db = client.get_database('sparta')
 # API 추가
 @app.route('/', methods = ['GET'])  # 데코레이터 문법
 def index():  # 함수 이름은 고유해야 함
-    return render_template('index.html', test = '테스트')
-
+    memos = list(db.articles.find({}, {'_id': False}))
+    return render_template('index.html', test = '테스트', memos=memos)
 
 # 아티클 추가 API
 @app.route('/memo', methods = ['POST'])
@@ -53,12 +54,14 @@ def save_memo():
         {'result': 'success', 'msg': '저장됐습니다.'}
     )
 
+# 아티클 로드 API
 @app.route('/memo', methods=['GET'])
 def list_memo():
     memos = list(db.articles.find({}, {'_id': False}))
     return jsonify({
         'result': 'success',
-        'articles': memos}
+        'articles': memos,
+        'msg': '로드합니다.'}
     )
 
 # app.py 파일 실행
