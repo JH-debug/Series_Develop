@@ -50,7 +50,7 @@
                     return;
                 }
                 // 3. POST /review 에 저장을 요청합니다.
-```jsx
+
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -116,7 +116,7 @@
                     success: function (response) {
                         if (response["result"] == "success") {
                             alert(response["msg"]);
-                            window.location.reload();
+                            document.location.reload();
                         }
                     }
                 })
@@ -136,6 +136,7 @@
                             for (let i = 0; i < reviews.length; i++) {
                                 makeCard(reviews[i]["title"], reviews[i]["author"], reviews[i]["review"]);
                             }
+                            alert(response["msg"]);
                         } else {
                             alert("리뷰를 받아오지 못했습니다");
                         }

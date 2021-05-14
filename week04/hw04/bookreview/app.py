@@ -15,7 +15,7 @@ def home():
 def write_review():
     form = request.form
     title = form['title']
-    author = form['author'],
+    author = form['author']
     review = form['review']
 
     document = {
@@ -33,9 +33,10 @@ def write_review():
 
 @app.route('/review', methods=['GET'])
 def read_review():
-    reviews = list(db.reviews.find({}, {'_id': False}))
+    reviews = list(db.bookreview.find({}, {'_id': False}))
     return jsonify(
         {'result': 'success',
+         'msg': '로드합니다.',
          'reviews': reviews}
     )
 
