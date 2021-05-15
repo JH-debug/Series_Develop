@@ -10,6 +10,7 @@
               crossorigin="anonymous">
         <!-- JS -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <!--jQuery 쿠키 관리 플러그인-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
                 integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
@@ -52,10 +53,11 @@
                 console.log(token)
 
                 // 만약 token이 없다면 login page로 이동
-                if (token == undefined) {
+                if (token === undefined) {
                     window.location.href = '/login'
                 } else {
                     // JWT에 해당하는 사용자 정보 받아오기
+                    // 토큰 앞에 Bearer 문자열은 토큰이 JWT 또는 OAuth 토큰임을 알려주는 표준 명세
                     $.ajax({
                         type: "POST",
                         url: "/user",
@@ -84,7 +86,7 @@
                 alert('로그아웃')
                 // 로그인 페이지로 이동
                 window.location.href = '/login'
-        }
+            }
 
             function openClose() {
                 // id 값 post-box의 display 값이 block 이면(= 눈에 보이면)
@@ -100,6 +102,7 @@
                     $("#btn-post-box").text("포스팅 박스 닫기");
                 }
             }
+
             function postArticle() {
                 let url_give = $('#post-url').val()
                 let comment_give = $('#post-comment').val()

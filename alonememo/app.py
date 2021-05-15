@@ -25,8 +25,9 @@ JWT_SECRET = os.environ['JWT_SECRET']
 @app.route('/', methods = ['GET'])  # 데코레이터 문법
 def index():  # 함수 이름은 고유해야 함
     # 파이썬 .get() 함수는 딕셔너리에서 값이 없을 경우, 에러가 나는 대신, None을 가져옴
-    token = request.cookies.get('/loginToken')
-
+    token = request.cookies.get('loginToken')
+    
+    # 메모 리스트 불러올 때 로그인 id 정보로 필터링
     if token:
         try:
             payload = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
@@ -40,10 +41,12 @@ def index():  # 함수 이름은 고유해야 함
 
     return render_template('index.html', test = '테스트', memos=memos)
 
+
 # 로그인 화면
 @app.route('/login', methods=['GET'])
 def login():
     return render_template('login.html')
+
 
 # 가입 화면
 @app.route('/register', methods=['GET'])
@@ -51,6 +54,7 @@ def register():
     return render_template('register.html')
 
 
+# 로그인 API
 @app.route('/api/login', methods=['POST'])
 def api_login():
     id = request.form['id_give']
@@ -79,32 +83,38 @@ def api_login():
         return jsonify({'result': 'fail', 'msg': '로그인 실패'})
 
 
+# 회원가입 API
 @app.route('/api/register', methods=['POST'])
 def api_register():
     id = request.form['id_give']
     pw = request.form['pw_give']
 
-    # 회원가입
+    user = db.users.find_one({'id': id}, {'_id': False})
+    if id == user['id']:
+        return jsonify({'result': 'fail', 'msg': '중복된 아이디가 있습니다. 아이디를 다시 설정해주세요.'})
 
-    # hash
-    # 1. 일정한 크기의 암호문으로 변경 (자릿수 노출 방지)
-    # 2. 복원 불가 (db에는 hash된 값 저장, 해시된 값을 비교
-    # 나라에서 hash 방식을 정해놓음
-    # sha256을 많이 씀
-    # hexdigest(): hash하면 사람이 읽을 수 없음, 따라서 문자열로 바꿔줌
+    else:
+        # 회원가입
 
-    # salting
-    # 1. pw + 랜덤 문자열 추가(솔트)
-    # 2. 솔트 추가된 비밀번호를 해시
-    # db에 저장할 때는 (해시 결과물 + 적용한 솔트) 묶어서 저장
+        # hash
+        # 1. 일정한 크기의 암호문으로 변경 (자릿수 노출 방지)
+        # 2. 복원 불가 (db에는 hash된 값 저장, 해시된 값을 비교
+        # 나라에서 hash 방식을 정해놓음
+        # sha256을 많이 씀
+        # hexdigest(): hash하면 사람이 읽을 수 없음, 따라서 문자열로 바꿔줌
 
-    pw_hash = hashlib.sha256(pw.encode()).hexdigest()
-    db.users.insert_one({'id': id, 'pw': pw_hash})
+        # salting
+        # 1. pw + 랜덤 문자열 추가(솔트)
+        # 2. 솔트 추가된 비밀번호를 해시
+        # db에 저장할 때는 (해시 결과물 + 적용한 솔트) 묶어서 저장
 
-    return jsonify({'result': 'success'})
+        pw_hash = hashlib.sha256(pw.encode()).hexdigest()
+        db.users.insert_one({'id': id, 'pw': pw_hash})
+
+        return jsonify({'result': 'success'})
 
 
-@app.route('/userinfo', methods=['POST'])
+@app.route('/user', methods=['POST'])
 def user_info():
     token_receive = request.headers['authorization']
     token = token_receive.split()[1]
@@ -116,8 +126,8 @@ def user_info():
         return jsonify({'result': 'success', 'id': payload['id']})
 
     except jwt.exceptions.ExpiredSignatureError:
-        # try 부분을 실행했지만 위와 같은 에러가 난다면
-        return jsonify({'result': 'fail'})
+        # try 부분을 실행했지만 위와 같은 에러가 난다면 (이 에러는 유효 시간이 지났을 때 발생)
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
 
 
 # 아티클 추가 API
@@ -161,7 +171,7 @@ def save_memo():
             'image': image['content'],
             'description': description['content'],
             'comment': comment_receive,
-            'id': id,
+            'id': id
         }
 
         db.articles.insert_one(document)
