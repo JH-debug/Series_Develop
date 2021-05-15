@@ -21,6 +21,11 @@ def index():  # 함수 이름은 고유해야 함
 def login():
     return render_template('login.html')
 
+# 가입
+@app.route('/register', methods=['GET'])
+def register():
+    return render_template('register.html')
+
 # 아티클 추가 API
 @app.route('/memo', methods = ['POST'])
 def save_memo():
