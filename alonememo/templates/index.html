@@ -10,6 +10,7 @@
               crossorigin="anonymous">
         <!-- JS -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
                 integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
                 crossorigin="anonymous"></script>
@@ -39,9 +40,26 @@
         </style>
         <script>
             $(document).ready(function () {
-                $("#cards-box").html("");
-                showArticles();
+                // $("#cards-box").html("");
+                // showArticles();
+                setUserInfo()
+
             });
+
+            function setUserInfo() {
+                let token = $.cookie('loginToken')
+                console.log(token)
+
+                // 만약 token이 없다면 login page로 이동
+                if (token == undefined) {
+                    window.location.href = '/login'
+                } else {
+                    // TODO 로그인 이후 메모장 화면 만들기 구현
+                }
+
+            }
+
+
             function openClose() {
                 // id 값 post-box의 display 값이 block 이면(= 눈에 보이면)
                 if ($("#post-box").css("display") == "block") {
