@@ -3,6 +3,7 @@ import hashlib
 import os
 import jwt as jwt
 from flask import Flask, render_template, request, jsonify
+import dotenv
 from flask.cli import load_dotenv
 from pymongo import MongoClient
 import requests
