@@ -16,15 +16,25 @@ def index():  # 함수 이름은 고유해야 함
     memos = list(db.articles.find({}, {'_id': False}))
     return render_template('index.html', test = '테스트', memos=memos)
 
-# 로그인
+# 로그인 화면
 @app.route('/login', methods=['GET'])
 def login():
     return render_template('login.html')
 
-# 가입
+# 가입 화면
 @app.route('/register', methods=['GET'])
 def register():
     return render_template('register.html')
+
+@app.route('/api/login', methods=['POST'])
+def api_login():
+    id = requests.form['id_give']
+    pw = requests.form['pw_give']
+
+    # TODO id, pw 검증 후에 JWT 만들어서 RETURN
+
+
+
 
 # 아티클 추가 API
 @app.route('/memo', methods = ['POST'])
