@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from pymongo import MongoClient
+import hashlib
 import requests
 from bs4 import BeautifulSoup
 
@@ -26,13 +27,38 @@ def login():
 def register():
     return render_template('register.html')
 
+
 @app.route('/api/login', methods=['POST'])
 def api_login():
-    id = requests.form['id_give']
-    pw = requests.form['pw_give']
+    id = request.form['id_give']
+    pw = request.form['pw_give']
 
     # TODO id, pw 검증 후에 JWT 만들어서 RETURN
 
+
+@app.route('/api/register', methods=['POST'])
+def api_register():
+    id = request.form['id_give']
+    pw = request.form['pw_give']
+
+    # 회원가입
+
+    # hash
+    # 1. 일정한 크기의 암호문으로 변경 (자릿수 노출 방지)
+    # 2. 복원 불가 (db에는 hash된 값 저장, 해시된 값을 비교
+    # 나라에서 hash 방식을 정해놓음
+    # sha256을 많이 씀
+    # hexdigest(): hash하면 사람이 읽을 수 없음, 따라서 문자열로 바꿔줌
+
+    # salting
+    # 1. pw + 랜덤 문자열 추가(솔트)
+    # 2. 솔트 추가된 비밀번호를 해시
+    # db에 저장할 때는 (해시 결과물 + 적용한 솔트) 묶어서 저장
+
+    pw_hash = hashlib.sha256(pw.encode()).hexdigest()
+    db.users.insert_one({'id': id, 'pw': pw_hash})
+
+    return jsonify({'result': 'success'})
 
 
 
