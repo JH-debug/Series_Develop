@@ -53,6 +53,14 @@ def login():
                             SERVICE_URL=SERVICE_URL)
 
 
+# 네이버 로그인 화면
+@app.route('/naver', methods=['GET'])
+def callback():
+    return render_template('callback.html',
+                           CLIENT_ID=CLIENT_ID,
+                           CALLBACK_URL=CALLBACK_URL)
+
+
 # 가입 화면
 @app.route('/register', methods=['GET'])
 def register():
@@ -117,6 +125,27 @@ def api_register():
         db.users.insert_one({'id': id, 'pw': pw_hash})
 
         return jsonify({'result': 'success'})
+
+
+# 네이버로 회원가입 API
+@app.route('/api/register/naver', methods=['POST'])
+def api_register_naver():
+    naver_id = request.form['naver_id']
+
+    if not db.users.find_one({'id': naver_id}, {'_id': False}):
+        db.users.insert_one({'id': naver_id, 'pw': ''})
+
+    expiration_time = datetime.timedelta(hours=1)
+
+    payload = {
+        'id': naver_id,
+        'exp': datetime.datetime.utcnow() + expiration_time
+    }
+
+    token = jwt.encode(payload, JWT_SECRET)
+    print(token)
+    return jsonify({'result': 'success', 'token': token})
+
 
 
 @app.route('/user', methods=['POST'])
