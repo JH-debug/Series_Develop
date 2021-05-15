@@ -16,6 +16,11 @@ def index():  # 함수 이름은 고유해야 함
     memos = list(db.articles.find({}, {'_id': False}))
     return render_template('index.html', test = '테스트', memos=memos)
 
+# 로그인
+@app.route('/login', methods=['GET'])
+def login():
+    return render_template('login.html')
+
 # 아티클 추가 API
 @app.route('/memo', methods = ['POST'])
 def save_memo():
