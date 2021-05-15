@@ -47,6 +47,7 @@
             });
 
             function setUserInfo() {
+                let userInfo = $('#user-info')
                 let token = $.cookie('loginToken')
                 console.log(token)
 
@@ -54,11 +55,36 @@
                 if (token == undefined) {
                     window.location.href = '/login'
                 } else {
-                    // TODO 로그인 이후 메모장 화면 만들기 구현
+                    // JWT에 해당하는 사용자 정보 받아오기
+                    $.ajax({
+                        type: "POST",
+                        url: "/user",
+                        headers: {'authorization': `Bearer ${token}`},
+                        data: {},
+                        success: function (response) {
+                            if (response['result'] === 'success') {
+                                let id = reponse['id']
+                                userInfo.append(`
+                                    <div class="btn btn-primary">${id}</div>
+                                    <button class="btn btn-primary" onClick="logOut()">LOGOUT</button>
+                                `)
+                            } else {
+                                alert('다시 로그인해주세요')
+                                window.location.href = '/login'
+                            }
+                        }
+                    })
                 }
 
             }
 
+            function logOut() {
+                // 쿠키의 JWT 삭제
+                $.removeCookie('loginToken', {path: '/'})
+                alert('로그아웃')
+                // 로그인 페이지로 이동
+                window.location.href = '/login'
+        }
 
             function openClose() {
                 // id 값 post-box의 display 값이 block 이면(= 눈에 보이면)
@@ -75,22 +101,24 @@
                 }
             }
             function postArticle() {
-                let url= $("#post-url").val()
-                let comment = $("#post-comment").val()
+                let url_give = $('#post-url').val()
+                let comment_give = $('#post-comment').val()
+                let token = $.cookie('loginToken')
 
                 $.ajax({
                     type: "POST",
                     url: "/memo",
-                    data: {'url_give': url, 'comment_give': comment},
+                    headers: {'authorization': `Bearer ${token}`},
+                    data: {'url_give': url_give, 'comment_give': comment_give},
                     success: function (response) { // 성공하면
                         if (response["result"] == "success") {
                             alert(response["msg"]);
                             // 페이지를 처음부터 다시 로드
                             document.location.reload()
-                        }
                     }
-                })
-            }
+                }
+            })
+        }
             function showArticles() {
                 $.ajax({
                     type: "GET",
@@ -128,6 +156,7 @@
     </head>
     <body>
         <div class="wrap">
+            <div id="user-info"></div>
             <div class="jumbotron">
                 <!-- flask 문법으로 test -->
                 <h1 class="display-4">{{ test }} 메모장!</h1>

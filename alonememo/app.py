@@ -24,7 +24,20 @@ JWT_SECRET = os.environ['JWT_SECRET']
 # API 추가
 @app.route('/', methods = ['GET'])  # 데코레이터 문법
 def index():  # 함수 이름은 고유해야 함
-    memos = list(db.articles.find({}, {'_id': False}))
+    # 파이썬 .get() 함수는 딕셔너리에서 값이 없을 경우, 에러가 나는 대신, None을 가져옴
+    token = request.cookies.get('/loginToken')
+
+    if token:
+        try:
+            payload = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+            print(payload)
+            memos = list(db.articles.find({'id': payload['id']}, {'_id': False}))
+        except jwt.ExpiredSignatureError:
+            memos = {}
+
+    else:
+        memos = {}
+
     return render_template('index.html', test = '테스트', memos=memos)
 
 # 로그인 화면
@@ -45,7 +58,6 @@ def api_login():
 
     # id, pw 검증 후에 JWT 만들어서 return
     pw_hash = hashlib.sha256(pw.encode()).hexdigest()
-
     user = db.users.find_one({'id': id, 'pw': pw_hash}, {'_id': False})
 
     # 가입 상태
@@ -60,9 +72,7 @@ def api_login():
         # 코드로 관리해서는 안되는 비밀값은 아래와 같이 처리
         token = jwt.encode(payload, JWT_SECRET)
         print(token)
-
         return jsonify({'result': 'success', 'token': token})
-
 
     # 가입하지 않은 상태
     else:
@@ -94,6 +104,21 @@ def api_register():
     return jsonify({'result': 'success'})
 
 
+@app.route('/userinfo', methods=['POST'])
+def user_info():
+    token_receive = request.headers['authorization']
+    token = token_receive.split()[1]
+    print(token)
+
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+        print(payload)
+        return jsonify({'result': 'success', 'id': payload['id']})
+
+    except jwt.exceptions.ExpiredSignatureError:
+        # try 부분을 실행했지만 위와 같은 에러가 난다면
+        return jsonify({'result': 'fail'})
+
 
 # 아티클 추가 API
 @app.route('/memo', methods = ['POST'])
@@ -102,36 +127,49 @@ def save_memo():
     url_receive = form['url_give']
     comment_receive = form['comment_give']
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
-    response = requests.get(
-        url_receive,
-        headers=headers
-    )
+    # JWT 추출
+    token_receive = request.headers['authorization']
+    token = token_receive.split()[1]
+    print(token)
 
-    soup = BeautifulSoup(response.text, 'html.parser')
+    try:
+        # JWT 페이로드에서 id 확인
+        payload = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+        id = payload['id']
 
-    title = soup.select_one('meta[property="og:title"]')
-    url = soup.select_one('meta[property="og:url"]')
-    image = soup.select_one('meta[property="og:image"]')
-    description = soup.select_one('meta[property="og:description"]')
-    print(title['content'])
-    print(url['content'])
-    print(image['content'])
-    print(description['content'])
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+        response = requests.get(
+            url_receive,
+            headers=headers
+        )
 
-    document = {
-        'title': title['content'],
-        'url': url['content'],
-        'image': image['content'],
-        'description': description['content'],
-        'comment': comment_receive
-    }
+        soup = BeautifulSoup(response.text, 'html.parser')
 
-    db.articles.insert_one(document)
-    return jsonify(
-        {'result': 'success', 'msg': '저장됐습니다.'}
-    )
+        title = soup.select_one('meta[property="og:title"]')
+        url = soup.select_one('meta[property="og:url"]')
+        image = soup.select_one('meta[property="og:image"]')
+        description = soup.select_one('meta[property="og:description"]')
+        print(title['content'])
+        print(url['content'])
+        print(image['content'])
+        print(description['content'])
+
+        document = {
+            'title': title['content'],
+            'url': url['content'],
+            'image': image['content'],
+            'description': description['content'],
+            'comment': comment_receive,
+            'id': id,
+        }
+
+        db.articles.insert_one(document)
+        return jsonify(
+            {'result': 'success', 'msg': '저장됐습니다.'}
+        )
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
 
 # 아티클 로드 API
 @app.route('/memo', methods=['GET'])
