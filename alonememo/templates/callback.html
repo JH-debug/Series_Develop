@@ -17,7 +17,7 @@
 
   // 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
   function naverSignInCallback() {
-    // alert(naver_id_login.getProfileData('email'));
+    alert(naver_id_login.getProfileData('email'));
     // alert(naver_id_login.getProfileData('id'));
     let naver_id = naver_id_login.getProfileData('id')
 
@@ -36,17 +36,15 @@
       success: function (response) {
           if (response['result'] === 'success') {
               $.cookie('loginToken', response['token'])
-              alert('회원가입이 완료되었습니다.')
+              alert('로그인이 완료되었습니다.')
               window.location.href = '/'
           } else {
-              alert('회원가입에 실패하셨습니다.')
+              alert('로그인에 실패하셨습니다.')
               window.location.href = '/login'
             }
         }
     })
-    alert(naver_id_login.getProfileData('email'));
   }
-
 
 </script>
 </body>

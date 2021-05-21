@@ -65,13 +65,13 @@
                         data: {},
                         success: function (response) {
                             if (response['result'] === 'success') {
-                                let id = reponse['id']
+                                let id = response['id']
                                 userInfo.append(`
                                     <div class="btn btn-primary">${id}</div>
-                                    <button class="btn btn-primary" onClick="logOut()">LOGOUT</button>
+                                    <div class="btn btn-primary" onclick="logOut()">로그아웃</div>
                                 `)
                             } else {
-                                alert('다시 로그인해주세요')
+                                alert('다시 로그인해주세요.')
                                 window.location.href = '/login'
                             }
                         }
