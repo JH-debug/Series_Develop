@@ -20,8 +20,9 @@ load_dotenv()
 # 환경변수 읽어오기
 JWT_SECRET = os.environ['JWT_SECRET']
 CLIENT_ID = os.environ['CLIENT_ID']
-CALLBACK_URL = os.environ['CALLBACN_URL']
+CALLBACK_URL = os.environ['CALLBACK_URL']
 SERVICE_URL = os.environ['SERVICE_URL']
+
 
 # API 추가
 @app.route('/', methods = ['GET'])  # 데코레이터 문법
@@ -53,20 +54,6 @@ def login():
                             SERVICE_URL=SERVICE_URL)
 
 
-# 네이버 로그인 화면
-@app.route('/naver', methods=['GET'])
-def callback():
-    return render_template('callback.html',
-                           CLIENT_ID=CLIENT_ID,
-                           CALLBACK_URL=CALLBACK_URL)
-
-
-# 가입 화면
-@app.route('/register', methods=['GET'])
-def register():
-    return render_template('register.html')
-
-
 # 로그인 API
 @app.route('/api/login', methods=['POST'])
 def api_login():
@@ -96,6 +83,12 @@ def api_login():
         return jsonify({'result': 'fail', 'msg': '로그인 실패'})
 
 
+# 회원가입 화면
+@app.route('/register', methods=['GET'])
+def register():
+    return render_template('register.html')
+
+
 # 회원가입 API
 @app.route('/api/register', methods=['POST'])
 def api_register():
@@ -103,7 +96,11 @@ def api_register():
     pw = request.form['pw_give']
 
     user = db.users.find_one({'id': id}, {'_id': False})
-    if id == user['id']:
+
+    if id.strip() or pw.strip() == '':
+        return jsonify({'result': 'fail', 'msg': '아이디와 비밀번호를 모두 입력해주세요.'})
+
+    elif id == user['id']:
         return jsonify({'result': 'fail', 'msg': '중복된 아이디가 있습니다. 아이디를 다시 설정해주세요.'})
 
     else:
@@ -127,7 +124,14 @@ def api_register():
         return jsonify({'result': 'success'})
 
 
-# 네이버로 회원가입 API
+# 네이버 로그인 화면
+@app.route('/naver', methods=['GET'])
+def callback():
+    return render_template('callback.html',
+                           CLIENT_ID=CLIENT_ID,
+                           CALLBACK_URL=CALLBACK_URL)
+
+# 네이버로 로그인 API
 @app.route('/api/register/naver', methods=['POST'])
 def api_register_naver():
     naver_id = request.form['naver_id']
@@ -135,6 +139,7 @@ def api_register_naver():
     if not db.users.find_one({'id': naver_id}, {'_id': False}):
         db.users.insert_one({'id': naver_id, 'pw': ''})
 
+    # JWT 발급
     expiration_time = datetime.timedelta(hours=1)
 
     payload = {
@@ -147,7 +152,7 @@ def api_register_naver():
     return jsonify({'result': 'success', 'token': token})
 
 
-
+# JWT 생성
 @app.route('/user', methods=['POST'])
 def user_info():
     token_receive = request.headers['authorization']
@@ -215,6 +220,7 @@ def save_memo():
     except jwt.ExpiredSignatureError:
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
 
+
 # 아티클 로드 API
 @app.route('/memo', methods=['GET'])
 def list_memo():
@@ -224,6 +230,7 @@ def list_memo():
         'articles': memos,
         'msg': '로드합니다.'}
     )
+
 
 # app.py 파일 실행
 if __name__ == '__main__':
