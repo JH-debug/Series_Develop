@@ -9,3 +9,5 @@ JWT_SECRET = os.environ['JWT_SECRET']
 CLIENT_ID = os.environ['CLIENT_ID']
 CALLBACK_URL = os.environ['CALLBACK_URL']
 SERVICE_URL = os.environ['SERVICE_URL']
+MONGODB_HOST= os.environ['MONGO_HOST']
+

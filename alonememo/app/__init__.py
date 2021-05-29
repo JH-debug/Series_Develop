@@ -1,9 +1,10 @@
 from flask import Flask
 from pymongo import MongoClient
+from config import MONGODB_HOST
 
-client = MongoClient('localhost', 27017)
+
+client = MongoClient(MONGODB_HOST)
 db = None
-
 
 # 플라스크 프레임워크에서 지정한 함수 이름
 # 플라스크 동작할 때, create_app() 함수 결과로 리턴한 앱 실행
