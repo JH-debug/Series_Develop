@@ -19,8 +19,10 @@ jobs:
           mongodb-version: 4.4
       - name: install requirements
         run: |
-          pip install -r requirements.txt
+          poetry export --output requirements.txt
+          pip install -r Series_Develop/alonememo/requirements.txt
       - name: test
+        # 환경변수: .env 대신 추가
         env:
           JWT_SECRET: "secret"
           CLIENT_ID: ""
