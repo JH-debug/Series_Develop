@@ -21,11 +21,6 @@ jobs:
         run: |
           pip install -r requirements.txt
       - name: test
-        env:
-          JWT_SECRET: "secret"
-          CLIENT_ID: ""
-          CALLBACK_URL: ""
-          SERVICE_URL: ""
-          MONGODB_HOST: "mongodb://localhost:27017"
+
         run: |
           pytest
